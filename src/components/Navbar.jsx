@@ -59,81 +59,88 @@ export default function Navbar({ cartCount = 3 }) {
           </nav>
 
           {/* Right Header Actions */}
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Search Icon */}
             <button 
               onClick={() => scrollToSection('menu')}
               aria-label="Search"
-              className="gsap-nav-item w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100/90 hover:bg-slate-200 text-slate-800 flex items-center justify-center transition-all shadow-sm cursor-pointer"
+              className="gsap-nav-item w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100/90 hover:bg-slate-200 text-slate-800 flex items-center justify-center transition-all shadow-sm cursor-pointer"
             >
-              <Search className="w-3.5 sm:w-5 h-3.5 sm:h-5 stroke-[2.2]" />
+              <Search className="w-4 sm:w-5 h-4 sm:h-5 stroke-[2.2]" />
             </button>
 
             {/* Cart Icon - Opens View Cart Drawer */}
             <button 
               onClick={() => setIsCartOpen(true)}
               aria-label="Cart"
-              className="gsap-nav-item relative w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100/90 hover:bg-slate-200 text-slate-800 flex items-center justify-center transition-all shadow-sm cursor-pointer"
+              className="gsap-nav-item relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100/90 hover:bg-slate-200 text-slate-800 flex items-center justify-center transition-all shadow-sm cursor-pointer"
             >
-              <ShoppingBag className="w-3.5 sm:w-5 h-3.5 sm:h-5 stroke-[2.2]" />
+              <ShoppingBag className="w-4 sm:w-5 h-4 sm:h-5 stroke-[2.2]" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 sm:w-4.5 h-4 sm:h-4.5 bg-[#ef4444] text-white text-[10px] sm:text-[11px] font-extrabold rounded-full flex items-center justify-center border-2 border-white shadow-md animate-pulse">
+                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-[#ef4444] text-white text-[11px] font-extrabold rounded-full flex items-center justify-center border-2 border-white shadow-md animate-pulse">
                   {cartCount}
                 </span>
               )}
             </button>
 
-            {/* Sign In Button */}
-            <button className="gsap-nav-item flex items-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 border-slate-800 text-slate-900 hover:bg-slate-900 hover:text-white font-bold text-[11px] sm:text-sm transition-all duration-200 shadow-sm cursor-pointer bg-white">
-              <User className="w-3.5 sm:w-4 h-3.5 sm:h-4 stroke-[2.5]" />
-              <span className="hidden min-[400px]:inline">sign in</span>
+            {/* Desktop Sign In Button */}
+            <button className="hidden md:flex gsap-nav-item items-center gap-2 px-4 py-2 rounded-full border-2 border-slate-800 text-slate-900 hover:bg-slate-900 hover:text-white font-bold text-sm transition-all duration-200 shadow-sm cursor-pointer bg-white">
+              <User className="w-4 h-4 stroke-[2.5]" />
+              <span>sign in</span>
             </button>
 
-            {/* Login Yellow Button */}
-            <button className="gsap-nav-item flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#facc15] hover:bg-[#eab308] text-slate-950 font-extrabold text-[11px] sm:text-sm shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer">
-              <LogIn className="w-3.5 sm:w-4 h-3.5 sm:h-4 stroke-[2.5]" />
+            {/* Desktop Login Yellow Button */}
+            <button className="hidden md:flex gsap-nav-item items-center gap-2 px-5 py-2 rounded-full bg-[#facc15] hover:bg-[#eab308] text-slate-950 font-extrabold text-sm shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer">
+              <LogIn className="w-4 h-4 stroke-[2.5]" />
               <span>login</span>
             </button>
 
-            {/* Mobile Menu Hamburger Button */}
+            {/* Mobile Menu 3-Line Hamburger Button */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
-              className="md:hidden w-8 h-8 rounded-full bg-slate-200 text-slate-900 flex items-center justify-center ml-0.5 cursor-pointer"
+              className="md:hidden w-9 h-9 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-900 flex items-center justify-center ml-0.5 cursor-pointer shadow-sm active:scale-95 transition-all"
             >
-              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
 
         </div>
 
-        {/* Mobile Dropdown Navigation Menu */}
+        {/* Mobile Dropdown 3-Line Navigation Menu (Contains Nav Links + Sign In & Login) */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 mt-3 p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-100 flex flex-col gap-3 z-50 animate-fadeIn">
+          <div className="md:hidden absolute top-full left-0 right-0 mt-3 p-5 bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-slate-100 flex flex-col gap-3 z-50 animate-fadeIn">
             <button 
               onClick={() => scrollToSection('home')}
-              className="text-left text-slate-900 font-bold text-base py-1 px-3 rounded-lg hover:bg-slate-50"
+              className="text-left text-slate-900 font-bold text-base py-2 px-3 rounded-xl hover:bg-slate-100 transition-colors"
             >
               Home
             </button>
             <button 
               onClick={() => scrollToSection('menu')}
-              className="text-left text-slate-600 font-medium text-base py-1 px-3 rounded-lg hover:bg-slate-50"
+              className="text-left text-slate-600 font-semibold text-base py-2 px-3 rounded-xl hover:bg-slate-100 transition-colors"
             >
               Menu
             </button>
             <button 
               onClick={() => scrollToSection('service')}
-              className="text-left text-slate-600 font-medium text-base py-1 px-3 rounded-lg hover:bg-slate-50"
+              className="text-left text-slate-600 font-semibold text-base py-2 px-3 rounded-xl hover:bg-slate-100 transition-colors"
             >
               Service
             </button>
-            <button 
-              onClick={() => scrollToSection('menu')}
-              className="text-left text-slate-600 font-medium text-base py-1 px-3 rounded-lg hover:bg-slate-50"
-            >
-              Shop
-            </button>
+
+            {/* Mobile Auth Buttons (Sign In & Login) */}
+            <div className="pt-3 border-t border-slate-200/80 flex flex-col gap-2.5">
+              <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full border-2 border-slate-800 text-slate-900 font-bold text-sm bg-white active:scale-95 transition-all shadow-sm">
+                <User className="w-4 h-4 stroke-[2.5]" />
+                <span>Sign In</span>
+              </button>
+
+              <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-[#facc15] hover:bg-[#eab308] text-slate-950 font-extrabold text-sm shadow-md active:scale-95 transition-all">
+                <LogIn className="w-4 h-4 stroke-[2.5]" />
+                <span>Login</span>
+              </button>
+            </div>
           </div>
         )}
       </header>
