@@ -78,7 +78,7 @@ export default function Navbar({ cartCount = 2 }) {
                 {cartCount}
               </span>
             )}
-          </button>dfd
+          </button>
 
           {/* Sign In Button */}
           <button className="gsap-nav-item flex items-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 border-slate-800 text-slate-900 hover:bg-slate-900 hover:text-white font-bold text-[11px] sm:text-sm transition-all duration-200 shadow-sm cursor-pointer bg-white">

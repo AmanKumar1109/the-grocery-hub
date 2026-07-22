@@ -68,7 +68,7 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-[#18181b] flex flex-col justify-between">
-      
+
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-emerald-500 animate-bounce">
@@ -83,7 +83,7 @@ export default function ExplorePage() {
 
         <div className="max-w-5xl mx-auto pt-6 space-y-4">
           <div className="flex items-center gap-3">
-            <Link 
+            <Link
               to="/"
               className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-slate-900"
             >
@@ -114,8 +114,8 @@ export default function ExplorePage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4">
             <div className="md:col-span-8 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(12); }}
                 placeholder="Search all 800+ items (e.g. Paneer, Pizza, Mousse, Salad)..."
@@ -128,11 +128,10 @@ export default function ExplorePage() {
                 <button
                   key={cat}
                   onClick={() => { setActiveCategory(cat); setVisibleCount(12); }}
-                  className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all duration-200 flex-shrink-0 cursor-pointer ${
-                    activeCategory === cat
+                  className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all duration-200 flex-shrink-0 cursor-pointer ${activeCategory === cat
                       ? 'bg-slate-900 text-white shadow-md'
                       : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
+                    }`}
                 >
                   {cat}
                 </button>
@@ -147,7 +146,7 @@ export default function ExplorePage() {
         {filteredCatalog.length === 0 ? (
           <div className="text-center py-16 space-y-3">
             <p className="text-slate-400 text-lg font-medium">No food items found matching "{searchQuery}"</p>
-            <button 
+            <button
               onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
               className="px-5 py-2 rounded-full bg-emerald-600 text-white font-bold text-sm"
             >
@@ -158,7 +157,7 @@ export default function ExplorePage() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {displayedItems.map((item) => (
-                <div 
+                <div
                   key={item.id}
                   className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col justify-between group"
                 >
@@ -174,18 +173,18 @@ export default function ExplorePage() {
                     </div>
 
                     <div className={`relative w-full h-36 ${item.bgClass} rounded-2xl flex items-center justify-center p-3 mb-3 overflow-hidden`}>
-                      <img 
-                        src={item.image} 
+                      <img
+                        src={item.image}
                         alt={item.name}
                         loading="lazy"
-                        className="w-28 h-28 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform duration-500 hardware-accel" 
+                        className="w-28 h-28 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform duration-500 hardware-accel"
                       />
                     </div>
 
                     <h3 className="font-bold text-base text-slate-900 group-hover:text-emerald-600 transition-colors mb-1 line-clamp-1">
                       {item.name}
                     </h3>
-                    
+
                     <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
                       <div className="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
                         <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
@@ -203,7 +202,7 @@ export default function ExplorePage() {
                       <span className="text-lg font-extrabold text-slate-900">${item.price.toFixed(2)}</span>
                     </div>
 
-                    <button 
+                    <button
                       onClick={() => handleAddToCart(item.name)}
                       className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#10b981] hover:bg-[#059669] text-white font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer"
                     >
