@@ -111,7 +111,7 @@ export default function MenuPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-[#18181b] flex flex-col justify-between">
-      
+
       {/* Top Banner Header */}
       <div className="bg-white border-b border-slate-200/80 px-4 sm:px-8 md:px-12 lg:px-16 pt-4 pb-12">
         <Navbar cartCount={cartCount} />
@@ -139,8 +139,8 @@ export default function MenuPage() {
           <div className="max-w-md mx-auto pt-3">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search food items (e.g. Salad, Burger, Cake)..."
@@ -155,11 +155,10 @@ export default function MenuPage() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
-                  activeCategory === cat
+                className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${activeCategory === cat
                     ? 'bg-slate-900 text-white shadow-lg scale-105'
                     : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -173,7 +172,7 @@ export default function MenuPage() {
         {filteredItems.length === 0 ? (
           <div className="text-center py-16 space-y-3">
             <p className="text-slate-400 text-lg font-medium">No food items found matching "{searchQuery}"</p>
-            <button 
+            <button
               onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
               className="px-5 py-2 rounded-full bg-emerald-600 text-white font-bold text-sm"
             >
@@ -183,7 +182,7 @@ export default function MenuPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredItems.map((item) => (
-              <div 
+              <div
                 key={item.id}
                 className="bg-white rounded-3xl p-5 shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 flex flex-col justify-between group"
               >
@@ -201,10 +200,10 @@ export default function MenuPage() {
 
                   {/* Food Image Container */}
                   <div className={`relative w-full h-48 ${item.bgClass} rounded-2xl flex items-center justify-center p-4 mb-4 overflow-hidden`}>
-                    <img 
-                      src={item.image} 
+                    <img
+                      src={item.image}
                       alt={item.name}
-                      className="w-40 h-40 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-500" 
+                      className="w-40 h-40 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
 
@@ -212,7 +211,7 @@ export default function MenuPage() {
                   <h3 className="font-bold text-lg text-slate-900 group-hover:text-emerald-600 transition-colors mb-1">
                     {item.name}
                   </h3>
-                  
+
                   <div className="flex items-center gap-3 text-xs text-slate-500 mb-4">
                     <div className="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
@@ -231,7 +230,7 @@ export default function MenuPage() {
                     <span className="text-xl font-extrabold text-slate-900">${item.price.toFixed(2)}</span>
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => handleAddToCart(item.name)}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#10b981] hover:bg-[#059669] text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
                   >
