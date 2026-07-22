@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import HomePage from './Pages/HomePage';
-import ExplorePage from './Pages/ExplorePage';
+import HomePage from './pages/HomePage';
+import ExplorePage from './pages/ExplorePage';
 
 export default function App() {
   return (
