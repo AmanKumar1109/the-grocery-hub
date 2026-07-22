@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Search, ShoppingBag, User, LogIn, Menu, X } from 'lucide-react';
 import CartDrawer from './CartDrawer';
+import { useNavigate } from 'react-router-dom';
 
 export default function Navbar({ cartCount = 3 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const navigate = useNavigate();
 
   const scrollToSection = (id) => {
     setMobileMenuOpen(false);
@@ -83,16 +85,20 @@ export default function Navbar({ cartCount = 3 }) {
               )}
             </button>
 
-            {/* Desktop Sign In Button */}
-            <button className="hidden md:flex gsap-nav-item items-center gap-2 px-4 py-2 rounded-full border-2 border-slate-800 text-slate-900 hover:bg-slate-900 hover:text-white font-bold text-sm transition-all duration-200 shadow-sm cursor-pointer bg-white">
+            {/* Desktop Sign Up Button */}
+            <button 
+              onClick={() => navigate('/signup')}
+              className="hidden md:flex gsap-nav-item items-center gap-2 px-4 py-2 rounded-full border-2 border-slate-800 text-slate-900 hover:bg-slate-900 hover:text-white font-bold text-sm transition-all duration-200 shadow-sm cursor-pointer bg-white">
               <User className="w-4 h-4 stroke-[2.5]" />
-              <span>sign in</span>
+              <span>Sign Up</span>
             </button>
 
             {/* Desktop Login Yellow Button */}
-            <button className="hidden md:flex gsap-nav-item items-center gap-2 px-5 py-2 rounded-full bg-[#facc15] hover:bg-[#eab308] text-slate-950 font-extrabold text-sm shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer">
+            <button 
+              onClick={() => navigate('/login')}
+              className="hidden md:flex gsap-nav-item items-center gap-2 px-5 py-2 rounded-full bg-[#facc15] hover:bg-[#eab308] text-slate-950 font-extrabold text-sm shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer">
               <LogIn className="w-4 h-4 stroke-[2.5]" />
-              <span>login</span>
+              <span>Login</span>
             </button>
 
             {/* Mobile Menu 3-Line Hamburger Button */}
@@ -131,12 +137,16 @@ export default function Navbar({ cartCount = 3 }) {
 
             {/* Mobile Auth Buttons (Sign In & Login) */}
             <div className="pt-3 border-t border-slate-200/80 flex flex-col gap-2.5">
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full border-2 border-slate-800 text-slate-900 font-bold text-sm bg-white active:scale-95 transition-all shadow-sm">
+              <button 
+                onClick={() => { setMobileMenuOpen(false); navigate('/signup'); }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full border-2 border-slate-800 text-slate-900 font-bold text-sm bg-white active:scale-95 transition-all shadow-sm">
                 <User className="w-4 h-4 stroke-[2.5]" />
-                <span>Sign In</span>
+                <span>Sign Up</span>
               </button>
 
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-[#facc15] hover:bg-[#eab308] text-slate-950 font-extrabold text-sm shadow-md active:scale-95 transition-all">
+              <button 
+                onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-[#facc15] hover:bg-[#eab308] text-slate-950 font-extrabold text-sm shadow-md active:scale-95 transition-all">
                 <LogIn className="w-4 h-4 stroke-[2.5]" />
                 <span>Login</span>
               </button>
