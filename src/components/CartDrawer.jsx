@@ -1,77 +1,41 @@
 import React, { useState } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, Tag, CheckCircle2 } from 'lucide-react';
-
-import mainSaladBowlImg from '../assets/main_salad_bowl.png';
-import miniBurgerImg from '../assets/mini_burger.png';
-import miniCakeImg from '../assets/mini_cake.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { 
+  selectCartItems, 
+  selectCartSubtotal, 
+  selectDiscountPercent, 
+  selectPromoMessage, 
+  removeFromCart, 
+  updateQuantity, 
+  applyPromo, 
+  clearCart 
+} from '../redux/cartSlice';
 
 export default function CartDrawer({ isOpen, onClose }) {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'Gourmet Paneer Tikka Bowl',
-      price: 12.15,
-      quantity: 1,
-      image: mainSaladBowlImg,
-      badge: 'Healthy'
-    },
-    {
-      id: 2,
-      name: 'Crispy Veg Supreme Burger',
-      price: 7.99,
-      quantity: 1,
-      image: miniBurgerImg,
-      badge: 'Popular'
-    },
-    {
-      id: 3,
-      name: 'Pink Berry Frosted Donut Cake',
-      price: 5.50,
-      quantity: 1,
-      image: miniCakeImg,
-      badge: 'Sweet'
-    }
-  ]);
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const subtotal = useSelector(selectCartSubtotal);
+  const discountPercent = useSelector(selectDiscountPercent);
+  const promoMessage = useSelector(selectPromoMessage);
 
-  const [promoCode, setPromoCode] = useState('');
-  const [discountPercent, setDiscountPercent] = useState(0);
-  const [promoMessage, setPromoMessage] = useState('');
+  const [inputPromoCode, setInputPromoCode] = useState('');
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
-  const handleQuantity = (id, delta) => {
-    setCartItems(prev => prev.map(item => {
-      if (item.id === id) {
-        const newQty = item.quantity + delta;
-        return newQty > 0 ? { ...item, quantity: newQty } : item;
-      }
-      return item;
-    }));
-  };
-
-  const handleRemove = (id) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
-  };
-
-  const applyPromo = (e) => {
+  const handleApplyPromo = (e) => {
     e.preventDefault();
-    if (promoCode.toUpperCase() === 'GROCERY20') {
-      setDiscountPercent(20);
-      setPromoMessage('20% Promo discount applied!');
-    } else if (promoCode.trim() !== '') {
-      setPromoMessage('Invalid coupon code. Try GROCERY20');
-    }
+    dispatch(applyPromo(inputPromoCode));
   };
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const discountAmount = (subtotal * discountPercent) / 100;
-  const deliveryFee = subtotal > 25 || subtotal === 0 ? 0 : 1.99;
+  const deliveryFee = subtotal > 500 || subtotal === 0 ? 0 : 49;
   const finalTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
 
   const handleCheckout = () => {
     setIsOrderPlaced(true);
     setTimeout(() => {
       setIsOrderPlaced(false);
-      setCartItems([]);
+      dispatch(clearCart());
       onClose();
     }, 3000);
   };
@@ -80,7 +44,7 @@ export default function CartDrawer({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Dark Backdrop Overlay */}
+      {/* Dark Overlay */}
       <div 
         onClick={onClose}
         className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity animate-fadeIn"
@@ -97,7 +61,9 @@ export default function CartDrawer({ isOpen, onClose }) {
               </div>
               <div>
                 <h2 className="font-extrabold text-lg text-white">Your Shopping Cart</h2>
-                <p className="text-xs text-slate-400">{cartItems.length} items in cart</p>
+                <p className="text-xs text-slate-400">
+                  {cartItems.reduce((acc, i) => acc + i.quantity, 0)} items in cart
+                </p>
               </div>
             </div>
             <button 
@@ -116,7 +82,7 @@ export default function CartDrawer({ isOpen, onClose }) {
                 <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto animate-bounce" />
                 <h3 className="text-2xl font-extrabold text-slate-900">Order Placed Successfully!</h3>
                 <p className="text-slate-500 text-sm max-w-xs mx-auto">
-                  Your fresh meal is being prepared by our master chefs. Estimated delivery in 14 minutes!
+                  Your order has been sent to our kitchen. Delivery partner will deliver it shortly!
                 </p>
               </div>
             ) : cartItems.length === 0 ? (
@@ -125,7 +91,7 @@ export default function CartDrawer({ isOpen, onClose }) {
                 <p className="text-slate-500 font-bold text-base">Your cart is currently empty</p>
                 <button 
                   onClick={onClose}
-                  className="px-5 py-2 rounded-full bg-slate-900 text-white font-bold text-xs"
+                  className="px-5 py-2 rounded-full bg-slate-900 text-white font-bold text-xs cursor-pointer"
                 >
                   Explore Food Items
                 </button>
@@ -138,27 +104,39 @@ export default function CartDrawer({ isOpen, onClose }) {
                 >
                   {/* Image */}
                   <div className="w-16 h-16 bg-white rounded-xl p-1.5 border border-slate-200 flex items-center justify-center flex-shrink-0">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                    <img 
+                      src={item.image} 
+                      alt={item.name} 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&auto=format&fit=crop&q=80';
+                      }}
+                      className="w-full h-full object-contain" 
+                    />
                   </div>
 
                   {/* Details */}
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-xs sm:text-sm text-slate-900 truncate">{item.name}</h4>
-                    <span className="text-xs font-extrabold text-emerald-600 block mt-0.5">${(item.price * item.quantity).toFixed(2)}</span>
+                    <h4 className="font-bold text-xs sm:text-sm text-slate-900 truncate" title={item.name}>
+                      {item.name}
+                    </h4>
+                    <span className="text-xs font-extrabold text-emerald-600 block mt-0.5">
+                      ₹{(item.price * item.quantity).toFixed(2)}
+                    </span>
                     
                     {/* Quantity Selector */}
                     <div className="flex items-center gap-2 mt-2">
                       <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-white border border-slate-200 text-xs">
                         <button 
-                          onClick={() => handleQuantity(item.id, -1)}
-                          className="text-slate-400 hover:text-slate-900"
+                          onClick={() => dispatch(updateQuantity({ id: item.id, delta: -1 }))}
+                          className="text-slate-400 hover:text-slate-900 cursor-pointer"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="font-bold text-slate-900 w-3 text-center">{item.quantity}</span>
+                        <span className="font-bold text-slate-900 w-4 text-center">{item.quantity}</span>
                         <button 
-                          onClick={() => handleQuantity(item.id, 1)}
-                          className="text-slate-400 hover:text-slate-900"
+                          onClick={() => dispatch(updateQuantity({ id: item.id, delta: 1 }))}
+                          className="text-slate-400 hover:text-slate-900 cursor-pointer"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
@@ -168,7 +146,7 @@ export default function CartDrawer({ isOpen, onClose }) {
 
                   {/* Remove Button */}
                   <button 
-                    onClick={() => handleRemove(item.id)}
+                    onClick={() => dispatch(removeFromCart(item.id))}
                     aria-label="Remove item"
                     className="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg transition-colors cursor-pointer"
                   >
@@ -184,13 +162,13 @@ export default function CartDrawer({ isOpen, onClose }) {
             <div className="p-5 border-t border-slate-200 bg-slate-50 space-y-4">
               
               {/* Promo Code Input */}
-              <form onSubmit={applyPromo} className="flex items-center gap-2">
+              <form onSubmit={handleApplyPromo} className="flex items-center gap-2">
                 <div className="relative flex-1">
                   <Tag className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input 
                     type="text" 
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
+                    value={inputPromoCode}
+                    onChange={(e) => setInputPromoCode(e.target.value)}
                     placeholder="Coupon code (e.g. GROCERY20)"
                     className="w-full pl-8 pr-3 py-1.5 text-xs rounded-full border border-slate-300 bg-white text-slate-900 focus:outline-none focus:border-emerald-500 font-semibold"
                   />
@@ -212,23 +190,23 @@ export default function CartDrawer({ isOpen, onClose }) {
               <div className="space-y-1.5 text-xs text-slate-600 font-medium">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-bold text-slate-900">${subtotal.toFixed(2)}</span>
+                  <span className="font-bold text-slate-900">₹{subtotal.toFixed(2)}</span>
                 </div>
                 {discountAmount > 0 && (
                   <div className="flex justify-between text-emerald-600">
-                    <span>Discount (20%)</span>
-                    <span className="font-bold">-${discountAmount.toFixed(2)}</span>
+                    <span>Discount ({discountPercent}%)</span>
+                    <span className="font-bold">-₹{discountAmount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span>Delivery Fee</span>
                   <span className="font-bold text-slate-900">
-                    {deliveryFee === 0 ? <span className="text-emerald-600">FREE</span> : `$${deliveryFee.toFixed(2)}`}
+                    {deliveryFee === 0 ? <span className="text-emerald-600">FREE (Orders &gt; ₹500)</span> : `₹${deliveryFee.toFixed(2)}`}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-2 border-t border-slate-200">
                   <span>Total Amount</span>
-                  <span className="text-base text-emerald-600">${finalTotal.toFixed(2)}</span>
+                  <span className="text-base text-emerald-600">₹{finalTotal.toFixed(2)}</span>
                 </div>
               </div>
 
