@@ -1,18 +1,17 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration using Vite Environment Variables
+// Firebase configuration with env variables + reliable fallbacks for Vercel production
 export const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyAHlWtmwePkAWxn_GfFOiHJRgPCn_nojuw",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "multigymdb.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "multigymdb",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "multigymdb.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "701839418884",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:701839418884:web:ac339b36b00640c4e27751",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-TPBVH6PP3F"
 };
 
 // Initialize Firebase
@@ -29,5 +28,7 @@ if (typeof window !== "undefined") {
     if (supported) {
       analytics = getAnalytics(app);
     }
+  }).catch((err) => {
+    console.warn("Analytics not supported in this environment:", err);
   });
 }
