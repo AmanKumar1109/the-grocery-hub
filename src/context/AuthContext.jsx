@@ -57,6 +57,7 @@ export function AuthProvider({ children }) {
       phone: '',
       address: null,
       addressType: 'Home',
+      wishlist: [],
       profileCompleted: false,
       createdAt: new Date().toISOString()
     };
@@ -110,6 +111,27 @@ export function AuthProvider({ children }) {
     await fetchUserProfile(currentUser.uid);
   };
 
+  // Toggle Wishlist Item
+  const toggleWishlist = async (item) => {
+    if (!currentUser) throw new Error("Please login to add to wishlist.");
+    
+    const currentWishlist = userProfile?.wishlist || [];
+    const isItemInWishlist = currentWishlist.some(w => w.id === item.id);
+    
+    let updatedWishlist;
+    if (isItemInWishlist) {
+      updatedWishlist = currentWishlist.filter(w => w.id !== item.id);
+    } else {
+      updatedWishlist = [...currentWishlist, item];
+    }
+
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      wishlist: updatedWishlist
+    }, { merge: true });
+    
+    setUserProfile(prev => ({ ...prev, wishlist: updatedWishlist }));
+  };
+
   // Logout function
   const logout = async () => {
     await signOut(auth);
@@ -140,6 +162,7 @@ export function AuthProvider({ children }) {
     login,
     completeProfile,
     deleteAddress,
+    toggleWishlist,
     logout,
     fetchUserProfile
   };

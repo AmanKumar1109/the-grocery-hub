@@ -9,6 +9,8 @@ import {
   selectDiscountPercent, 
   clearCart 
 } from '../redux/cartSlice';
+import { db } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -24,8 +26,27 @@ export default function CheckoutPage() {
   const deliveryFee = subtotal > 500 || subtotal === 0 ? 0 : 49;
   const finalTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     setIsOrderPlaced(true);
+    
+    try {
+      const orderData = {
+        userId: currentUser.uid,
+        items: cartItems,
+        amount: finalTotal,
+        subtotal,
+        discountAmount,
+        deliveryFee,
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        deliveryAddress: fullAddress,
+        paymentMethod: 'Cash on Delivery'
+      };
+      await addDoc(collection(db, 'orders'), orderData);
+    } catch (error) {
+      console.error("Failed to place order:", error);
+    }
+
     setTimeout(() => {
       dispatch(clearCart());
       navigate('/dashboard/orders');

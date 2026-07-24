@@ -1,32 +1,69 @@
-import React, { useState, useRef } from 'react';
-import { Package, Clock, CheckCircle2, XCircle, Search } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Package, Clock, CheckCircle2, XCircle, Search, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import EmptyState from '../../components/dashboard/EmptyState';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-
-const mockOrders = [
-  { id: 'ORD-84321', status: 'active', date: 'Today, 2:30 PM', items: 5, amount: 450, expected: 'Today, 4:00 PM', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=150' },
-  { id: 'ORD-84319', status: 'delivered', date: 'Yesterday, 10:15 AM', items: 12, amount: 1240, deliveredAt: 'Yesterday, 11:30 AM', image: 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&q=80&w=150' },
-  { id: 'ORD-84290', status: 'cancelled', date: 'Mon, 18 Jul', items: 3, amount: 210, cancelledReason: 'Items out of stock', image: 'https://images.unsplash.com/photo-1596199050105-6d5d32222916?auto=format&fit=crop&q=80&w=150' }
-];
+import { useAuth } from '../../context/AuthContext';
+import { db } from '../../firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function MyOrders() {
   const [activeTab, setActiveTab] = useState('all');
   const containerRef = useRef(null);
+  const { currentUser } = useAuth();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!currentUser) return;
+      try {
+        const q = query(
+          collection(db, 'orders'),
+          where('userId', '==', currentUser.uid)
+        );
+        const querySnapshot = await getDocs(q);
+        let ordersData = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            date: new Date(data.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            itemsCount: data.items?.length || 0,
+            image: data.items?.[0]?.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=150',
+            title: data.items?.[0]?.name || 'Fresh Groceries',
+            amount: data.amount || 0,
+          };
+        });
+        
+        // Sort descending by createdAt
+        ordersData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        setOrders(ordersData);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, [currentUser]);
 
   useGSAP(() => {
-    gsap.from('.order-card', {
-      y: 20,
-      opacity: 0,
-      duration: 0.5,
-      stagger: 0.1,
-      ease: 'power2.out',
-      clearProps: 'all'
-    });
-  }, { dependencies: [activeTab], scope: containerRef });
+    if (!loading) {
+      gsap.from('.order-card', {
+        y: 20,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'power2.out',
+        clearProps: 'all'
+      });
+    }
+  }, { dependencies: [activeTab, loading, orders], scope: containerRef });
 
-  const filteredOrders = mockOrders.filter(order => {
+  const filteredOrders = orders.filter(order => {
     if (activeTab === 'all') return true;
     return order.status === activeTab;
   });
@@ -77,7 +114,12 @@ export default function MyOrders() {
 
       {/* Order List */}
       <div className="space-y-4">
-        {filteredOrders.length > 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="w-10 h-10 text-emerald-500 animate-spin mb-4" />
+            <p className="text-slate-500 font-medium">Fetching your orders...</p>
+          </div>
+        ) : filteredOrders.length > 0 ? (
           filteredOrders.map(order => {
             const statusConfig = getStatusConfig(order.status);
             const StatusIcon = statusConfig.icon;
@@ -105,8 +147,8 @@ export default function MyOrders() {
                     <img src={order.image} alt="Order items" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-bold text-slate-800 line-clamp-1">Fresh Groceries & Vegetables</h4>
-                    <p className="text-sm font-medium text-slate-500 mt-1">{order.items} items</p>
+                    <h4 className="font-bold text-slate-800 line-clamp-1">{order.title}</h4>
+                    <p className="text-sm font-medium text-slate-500 mt-1">{order.itemsCount} items</p>
                   </div>
                 </div>
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Clock, ShoppingBag, Check, ArrowRight, Loader2 } from 'lucide-react';
+import { Star, Clock, ShoppingBag, Check, ArrowRight, Loader2, Heart } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useMenu } from '../context/MenuContext';
+import { useAuth } from '../context/AuthContext';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/cartSlice';
 
@@ -13,6 +14,7 @@ export default function MenuSection() {
   const sectionRef = useRef(null);
   const dispatch = useDispatch();
   const { items, categories, loading } = useMenu();
+  const { userProfile, toggleWishlist, currentUser } = useAuth();
   const [activeCategory, setActiveCategory] = useState('All');
   const [toastMessage, setToastMessage] = useState('');
 
@@ -24,6 +26,22 @@ export default function MenuSection() {
     dispatch(addToCart(item));
     setToastMessage(`Added ${item.name} to cart!`);
     setTimeout(() => setToastMessage(''), 2500);
+  };
+
+  const handleToggleWishlist = async (item) => {
+    if (!currentUser) {
+      setToastMessage('Please login to add to wishlist');
+      setTimeout(() => setToastMessage(''), 2500);
+      return;
+    }
+    try {
+      await toggleWishlist(item);
+      const isWishlisted = userProfile?.wishlist?.some(w => w.id === item.id);
+      setToastMessage(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist!');
+      setTimeout(() => setToastMessage(''), 2500);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // GSAP ScrollTrigger
@@ -172,6 +190,17 @@ export default function MenuSection() {
                       }}
                       className="w-24 sm:w-36 h-24 sm:h-36 object-contain drop-shadow-lg transform group-hover:scale-110 transition-transform duration-500 hardware-accel" 
                     />
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleToggleWishlist(item);
+                      }}
+                      className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white shadow-sm transition-colors z-10"
+                    >
+                      <Heart 
+                        className={`w-4 h-4 sm:w-5 sm:h-5 ${userProfile?.wishlist?.some(w => w.id === item.id) ? 'fill-red-500 stroke-red-500' : 'stroke-slate-400'}`} 
+                      />
+                    </button>
                   </div>
 
                   {/* Name */}

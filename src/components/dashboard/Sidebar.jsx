@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, ShoppingBag, Heart, MapPin, User, Settings, LogOut, Store } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -13,17 +14,21 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const { userProfile, currentUser } = useAuth();
+  const displayName = userProfile?.fullName || currentUser?.displayName || 'User';
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
     <aside className="hidden md:flex flex-col w-64 min-h-[calc(100vh-80px)] bg-white/80 backdrop-blur-xl border border-white/60 shadow-2xl rounded-3xl p-6 sticky top-10 mr-8 z-20">
       <div className="flex items-center gap-4 mb-10 px-2">
         <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-400 to-emerald-600 p-0.5 shadow-md">
           <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-            <span className="text-xl font-bold text-emerald-600">A</span>
+            <span className="text-xl font-bold text-emerald-600">{initial}</span>
           </div>
         </div>
         <div>
-          <h3 className="font-extrabold text-[#18181b]">Aman Kumar</h3>
-          <p className="text-xs font-semibold text-emerald-600">Premium Member</p>
+          <h3 className="font-extrabold text-[#18181b] truncate max-w-[130px]">{displayName}</h3>
+          <p className="text-xs font-semibold text-emerald-600">Member</p>
         </div>
       </div>
 
