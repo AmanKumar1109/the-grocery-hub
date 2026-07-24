@@ -1,17 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, Heart, User, MoreHorizontal, MapPin, Settings, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Heart, User, MoreHorizontal, MapPin, Settings, LogOut, X, Store } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 const mainNavItems = [
-  { path: '/dashboard', label: 'Home', icon: LayoutDashboard, exact: true },
+  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { path: '/', label: 'Home Page', icon: Store, exact: true },
   { path: '/dashboard/orders', label: 'Orders', icon: ShoppingBag },
-  { path: '/dashboard/wishlist', label: 'Wishlist', icon: Heart },
   { path: '/dashboard/profile', label: 'Profile', icon: User },
 ];
 
 const moreItems = [
+  { path: '/dashboard/wishlist', label: 'Wishlist', icon: Heart },
   { path: '/dashboard/addresses', label: 'Addresses', icon: MapPin },
   { path: '/dashboard/settings', label: 'Settings', icon: Settings },
 ];

@@ -1,9 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, Heart, MapPin, User, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Heart, MapPin, User, Settings, LogOut, Store } from 'lucide-react';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { path: '/', label: 'Go to Home Page', icon: Store, exact: true },
   { path: '/dashboard/orders', label: 'My Orders', icon: ShoppingBag },
   { path: '/dashboard/wishlist', label: 'Wishlist', icon: Heart },
   { path: '/dashboard/addresses', label: 'Saved Addresses', icon: MapPin },

@@ -8,6 +8,7 @@ import MenuPage from './pages/MenuPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import CompleteProfilePage from './pages/CompleteProfilePage';
+import CheckoutPage from './pages/CheckoutPage';
 import DashboardLayout from './layouts/DashboardLayout';
 import DashboardHome from './pages/dashboard/DashboardHome';
 import MyOrders from './pages/dashboard/MyOrders';
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/complete-profile" element={<CompleteProfilePage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />

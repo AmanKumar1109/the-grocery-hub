@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Mail, Lock, User, UserPlus, Phone, AlertCircle } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function SignupPage() {
@@ -17,6 +17,7 @@ export default function SignupPage() {
 
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -46,7 +47,7 @@ export default function SignupPage() {
       setLoading(true);
       await signup(email.trim(), password, fullName.trim());
       // Navigate immediately to Complete Profile flow
-      navigate('/complete-profile');
+      navigate('/complete-profile', { state: location.state });
     } catch (err) {
       console.error(err);
       if (err.code === 'auth/email-already-in-use') {

@@ -97,6 +97,19 @@ export function AuthProvider({ children }) {
     await fetchUserProfile(currentUser.uid);
   };
 
+  // Delete Address
+  const deleteAddress = async () => {
+    if (!currentUser) throw new Error("No authenticated user found.");
+    
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      address: null,
+      addressType: null
+    }, { merge: true });
+    
+    // Refresh user profile state
+    await fetchUserProfile(currentUser.uid);
+  };
+
   // Logout function
   const logout = async () => {
     await signOut(auth);
@@ -126,6 +139,7 @@ export function AuthProvider({ children }) {
     signup,
     login,
     completeProfile,
+    deleteAddress,
     logout,
     fetchUserProfile
   };

@@ -11,8 +11,12 @@ import {
   applyPromo, 
   clearCart 
 } from '../redux/cartSlice';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function CartDrawer({ isOpen, onClose }) {
+  const navigate = useNavigate();
+  const { currentUser, userProfile } = useAuth();
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
   const subtotal = useSelector(selectCartSubtotal);
@@ -32,12 +36,21 @@ export default function CartDrawer({ isOpen, onClose }) {
   const finalTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
 
   const handleCheckout = () => {
-    setIsOrderPlaced(true);
-    setTimeout(() => {
-      setIsOrderPlaced(false);
-      dispatch(clearCart());
+    if (!currentUser) {
       onClose();
-    }, 3000);
+      navigate('/login', { state: { from: window.location.pathname } });
+      return;
+    }
+
+    const hasAddress = userProfile?.address?.street && userProfile?.address?.city;
+    if (!hasAddress) {
+      onClose();
+      navigate('/complete-profile', { state: { from: window.location.pathname } });
+      return;
+    }
+
+    onClose();
+    navigate('/checkout');
   };
 
   if (!isOpen) return null;

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Phone, MapPin, Building, Home, Briefcase, Tag, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function CompleteProfilePage() {
   const { currentUser, userProfile, completeProfile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [phone, setPhone] = useState(userProfile?.phone || '');
   const [street, setStreet] = useState(userProfile?.address?.street || '');
@@ -43,7 +44,8 @@ export default function CompleteProfilePage() {
         pincode: pincode.trim(),
         addressType
       });
-      navigate('/dashboard');
+      const from = location.state?.from || '/';
+      navigate(from, { replace: true });
     } catch (err) {
       console.error(err);
       setError(err.message || 'Failed to update profile. Please try again.');
