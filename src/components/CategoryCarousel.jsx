@@ -50,7 +50,7 @@ export default function CategoryCarousel({
                 {item.name}
               </span>
               <span className={`text-[10px] sm:text-[11px] font-extrabold mt-0.5 ${item.tagColor}`}>
-                $ {item.unitPrice.toFixed(2)}
+                ₹ {item.unitPrice.toFixed(2)}
               </span>
             </div>
           );

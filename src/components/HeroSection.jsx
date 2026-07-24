@@ -175,7 +175,7 @@ export default function HeroSection() {
                 Total order :
               </span>
               <span className="text-xl sm:text-3xl font-extrabold text-[#18181b] tracking-tight">
-                ${totalOrderPrice}
+                ₹{totalOrderPrice}
               </span>
             </div>
 
